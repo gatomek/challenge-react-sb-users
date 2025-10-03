@@ -1,6 +1,7 @@
 export type FetchedUser = {
-    pesel: string;
+    id: number;
     name: string;
     lastName: string;
+    cardId: string;
     readDateTime: string;
 }

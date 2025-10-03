@@ -1,43 +1,63 @@
 package pl.gatomek.backend.users.db;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.stereotype.Repository;
-import pl.gatomek.backend.users.model.Person;
 import pl.gatomek.backend.users.model.User;
+import pl.gatomek.backend.users.model.UserDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-@Getter
-@Setter
 @Repository
 class UserDataBase implements IUserDataBase {
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-    private Map<String, Person> db = new HashMap<>();
+    private final Map<Integer, User> db = new HashMap<>();
 
-    //TODO: initialize the database from a CSV file at application startup
     public UserDataBase() {
-        Person person0 = new Person("0", "Abcde", "Fghijklmnop");
-        db.put(person0.getPesel(), person0);
+        db.put(calcNewId(), User.of("Barrett", "Hamilton"));
+        db.put(calcNewId(), User.of("Logan", "Bright"));
+    }
 
-        Person person1 = new Person("1", "Rstuwxyz", "Acdefghijklmnop");
-        db.put(person1.getPesel(), person1);
+    private Integer calcNewId() {
+        int max = db.keySet().stream().mapToInt(v -> v).max().orElse(0);
+        return ++max;
     }
 
     @Override
-    public List<User> getUsers() {
-        List<Person> personList = db.values().stream().toList();
-        return toUsers(personList);
+    public List<UserDto> getUsers() {
+        String readDateTime = LocalDateTime.now().format(formatter);
+
+        return db.entrySet().stream().sorted(Comparator.comparingInt(Map.Entry<Integer, User>::getKey)).map(entry -> {
+            User u = entry.getValue();
+            return UserDto.of(entry.getKey(), u.name(), u.lastName(), u.cardId(), readDateTime);
+        }).toList();
     }
 
     @Override
-    public List<User> toUsers(List<Person> personList) {
-        String rdt = LocalDateTime.now().format(formatter);
-        return personList.stream().map(p -> new User(p.getPesel(), p.getName(), p.getLastName(), rdt)).toList();
+    public UserDto addUser(UserDto userDto) {
+        User user = User.of(userDto.name(), userDto.lastName(), userDto.cardId());
+        int id = calcNewId();
+        db.put(id, user);
+
+        String readDateTime = LocalDateTime.now().format(formatter);
+        return new UserDto(id, user.name(), user.lastName(), user.cardId(), readDateTime);
+    }
+
+    @Override
+    public UserDto updateUser(UserDto userDto) {
+        int id = userDto.id();
+
+        Optional.ofNullable(db.get(id)).orElseThrow(() -> new NoSuchElementException("User Not Found"));
+        User user = new User(userDto.name(), userDto.lastName(), userDto.cardId());
+        db.put(id, user);
+
+        String readDateTime = LocalDateTime.now().format(formatter);
+        return new UserDto(id, user.name(), user.lastName(), user.cardId(), readDateTime);
+    }
+
+    @Override
+    public void deleteUser(int id) {
+        db.remove(id);
     }
 }
