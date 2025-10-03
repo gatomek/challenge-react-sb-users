@@ -1,0 +1,30 @@
+### getting users
+GET http://localhost:8080/api/users
+
+###
+
+### adding new user
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+    "name":"Tomek",
+    "lastName":"Testowy"
+}
+###
+
+### updating user
+PUT http://localhost:8080/api/users/1
+Content-Type: application/json
+
+{
+  "name":"Tomi",
+  "lastName":"Galuś",
+  "cardId": "123"
+}
+###
+
+### deleting user
+DELETE http://localhost:8080/api/users/2
+
+###

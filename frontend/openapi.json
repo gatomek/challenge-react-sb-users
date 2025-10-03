@@ -6,11 +6,74 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8888",
+            "url": "http://localhost:8080",
             "description": "Generated server url"
         }
     ],
     "paths": {
+        "/api/users/{id}": {
+            "put": {
+                "tags": [
+                    "user-rest-controller"
+                ],
+                "operationId": "updateUser",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "user-rest-controller"
+                ],
+                "operationId": "deleteUser",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/api/users": {
             "get": {
                 "tags": [
@@ -25,8 +88,36 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/User"
+                                        "$ref": "#/components/schemas/UserDto"
                                     }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "user-rest-controller"
+                ],
+                "operationId": "addUser",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserDto"
                                 }
                             }
                         }
@@ -37,11 +128,26 @@
     },
     "components": {
         "schemas": {
-            "User": {
+            "UserRequest": {
                 "type": "object",
                 "properties": {
-                    "pesel": {
+                    "name": {
                         "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "cardId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UserDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int32"
                     },
                     "name": {
                         "type": "string"
@@ -49,9 +155,11 @@
                     "lastName": {
                         "type": "string"
                     },
+                    "cardId": {
+                        "type": "string"
+                    },
                     "readDateTime": {
-                        "type": "string",
-                        "format": "date-time"
+                        "type": "string"
                     }
                 }
             }

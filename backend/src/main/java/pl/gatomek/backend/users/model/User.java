@@ -1,15 +1,16 @@
 package pl.gatomek.backend.users.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.UUID;
 
-@Getter
-@Setter
-@AllArgsConstructor
-public class User {
-	private String pesel;
-	private String name;
-	private String lastName;
-	private String readDateTime;
+public record User(String name, String lastName, String cardId) {
+
+    public static User of(String name, String lastName) {
+        Long n = UUID.randomUUID().getMostSignificantBits();
+        String cardId = Long.toHexString(n);
+        return new User(name, lastName, cardId);
+    }
+
+    public static User of(String name, String lastName, String cardId) {
+        return new User(name, lastName, cardId);
+    }
 }

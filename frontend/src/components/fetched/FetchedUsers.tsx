@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import type {FetchedUser} from "./FetchedUser.tsx";
+import type {FetchedUser} from "./FetchedUser";
 
 const usersUrl: string = import.meta.env.VITE_API_URL + "/api/users";
 
@@ -17,7 +17,7 @@ export function FetchedUsers() {
             <h2>Fetch - Users</h2>
             <ul> {
                 users?.map((u) =>
-                    <li key={u.pesel}>@{u.readDateTime} | {u.pesel} | {u.name} {u.lastName}</li>
+                    <li key={u.id}>{u.id} | {u.name} {u.lastName} | {u.cardId} | @{u.readDateTime}</li>
                 )
             }
             </ul>

@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react";
-import {getUsers, type User} from "../../client";
+import {getUsers, type UserDto} from "../../client";
 
 export function OpenApiUsers() {
 
-    const [users, setUsers] = useState<User[]>([]);
+    const [users, setUsers] = useState<UserDto[]>([]);
 
     useEffect(() => {
         getUsers()
@@ -17,8 +17,8 @@ export function OpenApiUsers() {
         <>
             <h2>OpenApi - Users</h2>
             <ul>{
-                users.map((u) =>
-                    <li key={u.pesel}>@{u.readDateTime?.toString()} | {u.pesel} | {u.name} {u.lastName}</li>
+                users.map((u:UserDto) =>
+                    <li key={u.id}>{u.id} | {u.name} {u.lastName} | {u.cardId} | @{u.readDateTime}</li>
                 )
             }
             </ul>

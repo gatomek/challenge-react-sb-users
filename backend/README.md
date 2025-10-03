@@ -1,2 +1,2 @@
 # OpenAPI endpoint
-* http://localhost:8080/v3/api-docs
+* {protocol}://{server}:{port}/v3/api-docs
