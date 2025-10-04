@@ -1,1 +1,26 @@
+# IDEs
 .idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# Build artifacts
+backend/target/
+frontend/dist/
+frontend/node_modules/
+
+# Environment
+frontend/env/.env.local
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
