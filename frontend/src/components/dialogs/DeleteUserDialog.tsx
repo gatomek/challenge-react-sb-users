@@ -6,7 +6,7 @@ import type {UserDto} from "../../client";
 import {useMutation} from "@tanstack/react-query";
 import {deleteUserMutation} from "../../client/@tanstack/react-query.gen";
 
-export type DeleteUserDialogProps = {
+type DeleteUserDialogProps = {
     onClose: (confirmation: boolean) => void;
     open: boolean;
     user: UserDto;

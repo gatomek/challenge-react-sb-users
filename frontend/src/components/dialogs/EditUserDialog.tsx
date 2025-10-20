@@ -7,14 +7,13 @@ import {UserForm} from "../forms/UserForm";
 import {useMutation} from "@tanstack/react-query";
 import {updateUserMutation} from "../../client/@tanstack/react-query.gen";
 
-export type EditUserDialogProps = {
+type EditUserDialogProps = {
     onClose: (success: boolean) => void;
     open: boolean;
     user: UserDto;
 }
 
 export function EditUserDialog(props: Readonly<EditUserDialogProps>) {
-
     const methods = useForm<UserDto>({
         defaultValues: {
             id: props.user.id,

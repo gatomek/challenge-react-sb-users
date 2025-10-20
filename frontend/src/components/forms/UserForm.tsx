@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 
-export type AddUserFormProps = {
+type AddUserFormProps = {
     onClose: (success: boolean) => void;
     onSubmit: (data: UserDto) => void;
     mode: 'add' | 'edit';
