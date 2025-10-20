@@ -7,7 +7,7 @@ import {UserForm} from "../forms/UserForm";
 import {useMutation} from "@tanstack/react-query";
 import {addUserMutation} from "../../client/@tanstack/react-query.gen";
 
-export type AddUserDialogProps = {
+type AddUserDialogProps = {
     onClose: (success: boolean) => void;
     open: boolean;
 }
