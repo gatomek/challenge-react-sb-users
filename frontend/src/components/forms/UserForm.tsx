@@ -37,9 +37,9 @@ export function UserForm(props: Readonly<AddUserFormProps>) {
                                            slotProps={errors.name && {
                                                input: {
                                                    endAdornment: (
-                                                       <InputAdornment position="start">
+                                                       <InputAdornment position="end">
                                                            <Tooltip title={errors.name?.message}>
-                                                               <KeyIcon style={{color: "Red"}}/>
+                                                               <KeyIcon color="error"/>
                                                            </Tooltip>
                                                        </InputAdornment>
                                                    ),
@@ -58,9 +58,9 @@ export function UserForm(props: Readonly<AddUserFormProps>) {
                                            slotProps={errors.lastName && {
                                                input: {
                                                    endAdornment: (
-                                                       <InputAdornment position="start">
+                                                       <InputAdornment position="end">
                                                            <Tooltip title={errors.lastName?.message}>
-                                                               <KeyIcon style={{color: "Red"}}/>
+                                                               <KeyIcon color="error"/>
                                                            </Tooltip>
                                                        </InputAdornment>
                                                    ),
@@ -79,9 +79,9 @@ export function UserForm(props: Readonly<AddUserFormProps>) {
                                            slotProps={errors.cardId && {
                                                input: {
                                                    endAdornment: (
-                                                       <InputAdornment position="start">
+                                                       <InputAdornment position="end">
                                                            <Tooltip title={errors.cardId?.message}>
-                                                               <KeyIcon style={{color: "Red"}}/>
+                                                               <KeyIcon color="error"/>
                                                            </Tooltip>
                                                        </InputAdornment>
                                                    ),

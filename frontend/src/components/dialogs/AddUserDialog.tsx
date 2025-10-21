@@ -7,7 +7,7 @@ import {UserForm} from "../forms/UserForm";
 import {useMutation} from "@tanstack/react-query";
 import {addUserMutation} from "../../client/@tanstack/react-query.gen";
 import {zodResolver} from '@hookform/resolvers/zod';
-import {NewUserSchema, type NewUserFormData} from "../forms/model/NewUserSchema.ts";
+import {NewUserSchema, type NewUserFormData, getDefaultNewUser} from "../forms/model/NewUserSchema.ts";
 
 type AddUserDialogProps = {
     onClose: (success: boolean) => void;
@@ -17,11 +17,7 @@ type AddUserDialogProps = {
 export function AddUserDialog(props: Readonly<AddUserDialogProps>) {
     const [error, setError] = useState<boolean>(false);
     const methods = useForm<NewUserFormData>({
-        defaultValues: {
-            name: '',
-            lastName: '',
-            cardId: ''
-        },
+        defaultValues: getDefaultNewUser(),
         resolver: zodResolver(NewUserSchema)
     });
 
