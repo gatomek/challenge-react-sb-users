@@ -7,7 +7,7 @@ import {UserForm} from "../forms/UserForm";
 import {useMutation} from "@tanstack/react-query";
 import {updateUserMutation} from "../../client/@tanstack/react-query.gen";
 import {zodResolver} from '@hookform/resolvers/zod';
-import {type EditedUserFormData, EditedUserSchema, getEditedUserFromUserDto} from "../forms/model/EditedUserSchema.ts";
+import {getUserFromUserDto, type UserFormData, UserSchema} from "../forms/model/UserSchema.ts";
 
 type EditUserDialogProps = {
     onClose: (success: boolean) => void;
@@ -17,9 +17,9 @@ type EditUserDialogProps = {
 
 export function EditUserDialog(props: Readonly<EditUserDialogProps>) {
     const [error, setError] = useState<boolean>(false);
-    const methods = useForm<EditedUserFormData>({
-        defaultValues: getEditedUserFromUserDto(props.user),
-        resolver: zodResolver(EditedUserSchema)
+    const methods = useForm<UserFormData>({
+        defaultValues: getUserFromUserDto(props.user),
+        resolver: zodResolver(UserSchema)
     });
 
     const updateMutation = useMutation({
@@ -32,8 +32,8 @@ export function EditUserDialog(props: Readonly<EditUserDialogProps>) {
         }
     });
 
-    const onSubmit = (userDto: UserDto) => {
-        const {name, lastName, cardId} = userDto;
+    const onSubmit = (userFormData: UserFormData) => {
+        const {name, lastName, cardId} = userFormData;
         updateMutation.mutate({path: {id: props.user.id!}, body: {name, lastName, cardId}})
     };
 

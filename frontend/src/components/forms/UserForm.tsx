@@ -1,33 +1,23 @@
 import {Container, FormControl, InputAdornment, Tooltip} from "@mui/material";
-import {type UserDto} from "../../client";
 import {Controller, useFormContext} from "react-hook-form";
 import TextField from '@mui/material/TextField';
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import KeyIcon from '@mui/icons-material/PriorityHighOutlined';
+import type {UserFormData} from "./model/UserSchema.ts";
 
 type AddUserFormProps = {
     onClose: (success: boolean) => void;
-    onSubmit: (data: UserDto) => void;
+    onSubmit: (data: UserFormData) => void;
     mode: 'add' | 'edit';
 }
 
 export function UserForm(props: Readonly<AddUserFormProps>) {
-    const methods = useFormContext<UserDto>();
+    const methods = useFormContext<UserFormData>();
     const {errors} = methods.formState;
 
     return (
         <Container component="form" onSubmit={methods.handleSubmit(props.onSubmit)} maxWidth="xs">
-            {props.mode === "edit" &&
-                <FormControl fullWidth variant="outlined">
-                    <Controller name="id"
-                                control={methods.control}
-                                render={({field}) =>
-                                    <TextField {...field} margin="dense" label="Id" disabled/>
-                                }
-                    />
-                </FormControl>
-            }
             <FormControl fullWidth variant="outlined">
                 <Controller name="name"
                             control={methods.control}
