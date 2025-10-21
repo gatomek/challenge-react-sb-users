@@ -7,7 +7,7 @@ import {UserForm} from "../forms/UserForm";
 import {useMutation} from "@tanstack/react-query";
 import {updateUserMutation} from "../../client/@tanstack/react-query.gen";
 import {zodResolver} from '@hookform/resolvers/zod';
-import {type EditedUserFormData, EditedUserSchema} from "../forms/model/EditedUserSchema.ts";
+import {type EditedUserFormData, EditedUserSchema, getEditedUserFromUserDto} from "../forms/model/EditedUserSchema.ts";
 
 type EditUserDialogProps = {
     onClose: (success: boolean) => void;
@@ -18,12 +18,7 @@ type EditUserDialogProps = {
 export function EditUserDialog(props: Readonly<EditUserDialogProps>) {
     const [error, setError] = useState<boolean>(false);
     const methods = useForm<EditedUserFormData>({
-        defaultValues: {
-            id: props.user.id,
-            name: props.user.name,
-            lastName: props.user.lastName,
-            cardId: props.user.cardId,
-        },
+        defaultValues: getEditedUserFromUserDto(props.user),
         resolver: zodResolver(EditedUserSchema)
     });
 
@@ -33,7 +28,7 @@ export function EditUserDialog(props: Readonly<EditUserDialogProps>) {
             props.onClose(true);
         },
         onError: (): void => {
-            setError(true)
+            setError(true);
         }
     });
 
