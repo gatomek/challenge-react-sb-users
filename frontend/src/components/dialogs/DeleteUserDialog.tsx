@@ -1,5 +1,5 @@
 import Dialog from "@mui/material/Dialog";
-import {Fragment} from "react";
+import {Fragment, useState} from "react";
 import {DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import Button from "@mui/material/Button";
 import type {UserDto} from "../../client";
@@ -13,33 +13,34 @@ type DeleteUserDialogProps = {
 }
 
 export function DeleteUserDialog(props: Readonly<DeleteUserDialogProps>) {
-
-    const mutation = useMutation({
+    const [error, setError] = useState<boolean>(false);
+    const deleteMutation = useMutation({
         ...deleteUserMutation(),
         onSuccess: () => {
-            console.log('Success: User Deleted');
             props.onClose(true);
         },
         onError: () => {
-            console.log('Error: User Not Deleted');
+            setError(true);
         }
     });
 
     const deleteUser = (userDto: UserDto) => {
-        mutation.mutate({path: {id: userDto.id ?? -1}});
+        setError(false);
+        deleteMutation.mutate({path: {id: userDto.id!}});
     }
 
     return (
         <Dialog open={props.open} slots={{transition: Fragment}}>
-            <DialogTitle>Delete User</DialogTitle>
+            <DialogTitle>Confirmation</DialogTitle>
             <DialogContent dividers={true}>
+                {error && <DialogContentText>Server Error</DialogContentText>}
                 <DialogContentText>
-                    Are you sure?
+                    Delete user {props.user.name} {props.user.lastName}?
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button onClick={() => props.onClose(false)}>Cancel</Button>
-                <Button onClick={() => deleteUser(props.user)}>Delete</Button>
+                <Button onClick={() => deleteUser(props.user)} type="submit">Delete</Button>
             </DialogActions>
         </Dialog>
     )
