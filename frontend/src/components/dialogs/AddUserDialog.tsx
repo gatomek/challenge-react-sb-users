@@ -1,11 +1,13 @@
 import Dialog from '@mui/material/Dialog';
-import {DialogContent, DialogTitle} from "@mui/material";
+import {DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import type {UserDto} from "../../client";
 import {FormProvider, useForm} from "react-hook-form";
-import {Fragment} from "react";
+import {Fragment, useState} from "react";
 import {UserForm} from "../forms/UserForm";
 import {useMutation} from "@tanstack/react-query";
 import {addUserMutation} from "../../client/@tanstack/react-query.gen";
+import {zodResolver} from '@hookform/resolvers/zod';
+import {NewUserSchema, type NewUserFormData} from "../forms/model/NewUserSchema.ts";
 
 type AddUserDialogProps = {
     onClose: (success: boolean) => void;
@@ -13,34 +15,36 @@ type AddUserDialogProps = {
 }
 
 export function AddUserDialog(props: Readonly<AddUserDialogProps>) {
-    const methods = useForm<UserDto>({
+    const [error, setError] = useState<boolean>(false);
+    const methods = useForm<NewUserFormData>({
         defaultValues: {
             name: '',
             lastName: '',
             cardId: ''
-        }
+        },
+        resolver: zodResolver(NewUserSchema)
     });
 
-    const mutation = useMutation({
+    const addMutation = useMutation({
         ...addUserMutation(),
-        onSuccess: () => {
-            console.log('Success: User Added');
+        onSuccess: (): void => {
             props.onClose(true);
         },
-        onError: () => {
-            console.log('Error: User Not Added');
+        onError: (): void => {
+            setError(true);
         }
     });
 
     const onSubmit = (userDto: UserDto) => {
-        const {name, lastName, cardId} = userDto;
-        mutation.mutate({body: {name, lastName, cardId}})
+        setError(false);
+        addMutation.mutate({body: userDto})
     };
 
     return (
         <Dialog open={props.open} slots={{transition: Fragment}}>
             <DialogTitle>Add New User</DialogTitle>
             <DialogContent dividers={true}>
+                {error && <DialogContentText>Server Error</DialogContentText>}
                 <FormProvider {...methods}>
                     <UserForm onClose={props.onClose} onSubmit={onSubmit} mode="add"/>
                 </FormProvider>

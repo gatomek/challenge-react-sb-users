@@ -1,9 +1,10 @@
-import {Container, FormControl} from "@mui/material";
+import {Container, FormControl, InputAdornment, Tooltip} from "@mui/material";
 import {type UserDto} from "../../client";
-import {useFormContext, Controller} from "react-hook-form";
+import {Controller, useFormContext} from "react-hook-form";
 import TextField from '@mui/material/TextField';
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import KeyIcon from '@mui/icons-material/PriorityHighOutlined';
 
 type AddUserFormProps = {
     onClose: (success: boolean) => void;
@@ -13,6 +14,7 @@ type AddUserFormProps = {
 
 export function UserForm(props: Readonly<AddUserFormProps>) {
     const methods = useFormContext<UserDto>();
+    const {errors} = methods.formState;
 
     return (
         <Container component="form" onSubmit={methods.handleSubmit(props.onSubmit)} maxWidth="xs">
@@ -21,7 +23,7 @@ export function UserForm(props: Readonly<AddUserFormProps>) {
                     <Controller name="id"
                                 control={methods.control}
                                 render={({field}) =>
-                                    <TextField {...field} margin="dense" label="Id" helperText="DB Id" disabled/>
+                                    <TextField {...field} margin="dense" label="Id" disabled/>
                                 }
                     />
                 </FormControl>
@@ -30,7 +32,20 @@ export function UserForm(props: Readonly<AddUserFormProps>) {
                 <Controller name="name"
                             control={methods.control}
                             render={({field}) =>
-                                <TextField {...field} margin="dense" label="Name" helperText="Your name"/>
+                                <TextField {...field} margin="dense" label="Name *"
+                                           error={!!errors.name}
+                                           slotProps={errors.name && {
+                                               input: {
+                                                   endAdornment: (
+                                                       <InputAdornment position="start">
+                                                           <Tooltip title={errors.name?.message}>
+                                                               <KeyIcon style={{color: "Red"}}/>
+                                                           </Tooltip>
+                                                       </InputAdornment>
+                                                   ),
+                                               },
+                                           }}
+                                />
                             }
                 />
             </FormControl>
@@ -38,7 +53,20 @@ export function UserForm(props: Readonly<AddUserFormProps>) {
                 <Controller name="lastName"
                             control={methods.control}
                             render={({field}) =>
-                                <TextField {...field} margin="dense" label="Last Name" helperText="Your last name"/>
+                                <TextField {...field} margin="dense" label="Last Name *"
+                                           error={!!errors.lastName}
+                                           slotProps={errors.lastName && {
+                                               input: {
+                                                   endAdornment: (
+                                                       <InputAdornment position="start">
+                                                           <Tooltip title={errors.lastName?.message}>
+                                                               <KeyIcon style={{color: "Red"}}/>
+                                                           </Tooltip>
+                                                       </InputAdornment>
+                                                   ),
+                                               },
+                                           }}
+                                />
                             }
                 />
             </FormControl>
@@ -46,13 +74,26 @@ export function UserForm(props: Readonly<AddUserFormProps>) {
                 <Controller name="cardId"
                             control={methods.control}
                             render={({field}) =>
-                                <TextField {...field} margin="dense" label="Card Id" helperText="Your Card Id"/>
+                                <TextField {...field} margin="dense" label="Card Id *"
+                                           error={!!errors.cardId}
+                                           slotProps={errors.cardId && {
+                                               input: {
+                                                   endAdornment: (
+                                                       <InputAdornment position="start">
+                                                           <Tooltip title={errors.cardId?.message}>
+                                                               <KeyIcon style={{color: "Red"}}/>
+                                                           </Tooltip>
+                                                       </InputAdornment>
+                                                   ),
+                                               },
+                                           }}
+                                />
                             }
                 />
             </FormControl>
 
             <Box sx={{display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 2}}>
-                <Button type="button" onClick={() => props.onClose( false)}>Cancel</Button>
+                <Button type="button" onClick={() => props.onClose(false)}>Cancel</Button>
                 <Button type="reset" onClick={() => methods.reset()}>Reset</Button>
                 <Button type="submit">{props.mode === 'add' ? 'Add' : 'Update'}</Button>
             </Box>

@@ -1,11 +1,13 @@
 import Dialog from '@mui/material/Dialog';
-import {DialogContent, DialogTitle} from "@mui/material";
+import {DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import type {UserDto} from "../../client";
 import {FormProvider, useForm} from "react-hook-form";
-import {Fragment} from "react";
+import {Fragment, useState} from "react";
 import {UserForm} from "../forms/UserForm";
 import {useMutation} from "@tanstack/react-query";
 import {updateUserMutation} from "../../client/@tanstack/react-query.gen";
+import {zodResolver} from '@hookform/resolvers/zod';
+import {type EditedUserFormData, EditedUserSchema} from "../forms/model/EditedUserSchema.ts";
 
 type EditUserDialogProps = {
     onClose: (success: boolean) => void;
@@ -14,35 +16,37 @@ type EditUserDialogProps = {
 }
 
 export function EditUserDialog(props: Readonly<EditUserDialogProps>) {
-    const methods = useForm<UserDto>({
+    const [error, setError] = useState<boolean>(false);
+    const methods = useForm<EditedUserFormData>({
         defaultValues: {
             id: props.user.id,
             name: props.user.name,
             lastName: props.user.lastName,
             cardId: props.user.cardId,
-        }
+        },
+        resolver: zodResolver(EditedUserSchema)
     });
 
-    const mutation = useMutation({
+    const updateMutation = useMutation({
         ...updateUserMutation(),
-        onSuccess: () => {
-            console.log('Success: User Updated');
+        onSuccess: (): void => {
             props.onClose(true);
         },
-        onError: () => {
-            console.log('Error: User Not Updated');
+        onError: (): void => {
+            setError(true)
         }
     });
 
     const onSubmit = (userDto: UserDto) => {
         const {name, lastName, cardId} = userDto;
-        mutation.mutate({path: {id: props.user.id ?? -1}, body: {name, lastName, cardId}})
+        updateMutation.mutate({path: {id: props.user.id!}, body: {name, lastName, cardId}})
     };
 
     return (
         <Dialog open={props.open} slots={{transition: Fragment}}>
             <DialogTitle>Edit User</DialogTitle>
             <DialogContent dividers={true}>
+                {error && <DialogContentText>Server Error</DialogContentText>}
                 <FormProvider {...methods}>
                     <UserForm onClose={props.onClose} onSubmit={onSubmit} mode="edit"/>
                 </FormProvider>

@@ -17,8 +17,8 @@ export default function ReactQueryUsers() {
                 )
             }
             </ul>
-            <button onClick={() =>
-                queryClient.invalidateQueries({queryKey: getUsersQueryKey()})}>Refresh Users
+            <button onClick={() =>queryClient.invalidateQueries({queryKey: getUsersQueryKey()})}>
+                Refresh Users
             </button>
         </>
     )
